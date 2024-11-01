@@ -1,6 +1,6 @@
 /*
  -------------------------------------
- File:    life_functions.c
+ File:    game.c
  Project: conway-game-of-life
  Main game file
  -------------------------------------
