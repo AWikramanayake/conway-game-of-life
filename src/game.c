@@ -120,7 +120,7 @@ void* draw_input_thread(void* Gv) {
             timed_cond_wait(&G->draw_inp, &G->mtx);
         }
 
-        // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+        // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV    // code inside these cages is executed holding the mutex
         draw_board(G);
         spawns = G->spawns;                                     // ensure thread knows if displayed spawns/kills are up to date
         // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -165,8 +165,9 @@ void* input_thread(void* Gv) {
         case 't' : 
         case 'T' :
                 pthread_mutex_lock(&G->mtx);
+                // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV        // code inside these cages is executed holding the mutex
+                draw_board(G);           
                 G->last_command = TOGGLE_TOROIDAL; 
-                // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
                 G->toroidal = !G->toroidal;
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 pthread_cond_signal(&G->draw_inp);
@@ -182,8 +183,8 @@ void* input_thread(void* Gv) {
         case 'f' :
         case 'F' :
                 pthread_mutex_lock(&G->mtx);
-                G->last_command = SPAWN_LIFE; 
                 // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+                G->last_command = SPAWN_LIFE; 
                 life_spawn(G);
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 pthread_cond_signal(&G->draw_inp);
