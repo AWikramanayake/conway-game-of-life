@@ -24,6 +24,7 @@ This project is a lightweight (semi-)interactive implementation of Conway's game
 Both game phases use 2 threads: one to handle output and one to handle other game tasks (reading and implementing user input in the first phase, and updating the game board in the second phase). Updates are currently done using a naive algorithm (simply counting living neighbours for each tile). There is also a simple early stopping mechanism that detects when the board has reached a steady state.
 
 ### Next steps:
+- Add linux support (the project currently uses Sleep() from windows.h to cap output refresh rate) and create a makefile
 - Allow the user to pause the game during the second phase and return to the input phase to change board state/game parameters
 - Use a hash table to compare the board state to recent previous states to detect when the board has entered a loop state.
 - Implement a more efficient update algorithms that uses a bitmap and bitshift operations to operate on multiple tiles directly.
