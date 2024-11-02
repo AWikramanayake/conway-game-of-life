@@ -24,6 +24,9 @@ The evolution of the game board from one cycle to the next is governed by a set 
 
 ## This project
 This project is a lightweight (semi-)interactive implementation of Conway's game of life written in C that (currently) runs in the terminal. The game consists of an input phase during which the user can arrange the initial state of the board and adjust game parameters (board size, update rate, board geometry, maximum iterations) followed by the fully automated game phase.
+
+Both game phases use 2 threads: one to handle output and one to handle other game tasks (reading and implementing user input in the first phase, and updating the game board in the second phase). Updates are currently done using a naive algorithm (simply counting living neighbours for each tile). A simple early stopping mechanism also detects when the board has reached a steady state.
+
 <br>
 <p align="center">
 <img src="https://github.com/AWikramanayake/conway-game-of-life/blob/main/misc/Gosper%20glider%20gun.gif" width="720"/>
@@ -35,8 +38,10 @@ Example 2: Gosper's Glider Gun</br>
 <img src="https://github.com/AWikramanayake/conway-game-of-life/blob/main/misc/Gosper%20glider%20gun%20toroidal.gif" width="720"/>
 </p>
 <p align="center">
-Blooper: Gosper's Glider Gun with toroidal board geometry</br><br>
-Both game phases use 2 threads: one to handle output and one to handle other game tasks (reading and implementing user input in the first phase, and updating the game board in the second phase). Updates are currently done using a naive algorithm (simply counting living neighbours for each tile). There is also a simple early stopping mechanism that detects when the board has reached a steady state.
+Blooper: Gosper's Glider Gun with toroidal board geometry</p></br><br>
+
+Simkin's glider gun (example 1) and Gosper's glider gun (example 2) are implementations of periodic signal emitters that can be created using the game's simple rules. These can be combined with signal eaters, negators, reflectors, etc to create logic gates, hence why the game is Turing complete.
+
 
 ### Next steps:
 - Add linux support (the project currently uses Sleep() from windows.h to cap output refresh rate) and create a makefile
