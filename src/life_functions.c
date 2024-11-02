@@ -66,7 +66,7 @@ void* create_matrix(size_t rows, size_t cols) {
         row_ptrs[i] = row_ptrs[0] + i * cols;                       // make row pointers point to start of each row
     }
 
-    return RPv;
+    return RPv;         // return void* to START OF ROW POINTER ARRAY. Start of data block can be accessed using (bool**)RPv[0].
 }
 
 
@@ -134,20 +134,20 @@ int game_update(game_state* G) {
         tempgrid[0][G->n_cols + 1] = M[G->n_rows - 1][0];
         tempgrid[G->n_rows + 1][G->n_cols + 1] = M[0][0];
 
-    } else {                                                        // not toroidal => walls = pad with 0s
+    } else {                                                        // not toroidal => walls are padded with 0s
         for (int i = 0; i < G->n_rows + 2; i++) {
-            tempgrid[i][0] = false;
+            tempgrid[i][0] = false;                                 // padding left and right columns including corners
             tempgrid[i][G->n_cols + 1] = false;
         }
-        for (int j = 1; j < G->n_cols + 1; j++) {
+        for (int j = 1; j < G->n_cols + 1; j++) {                   // padding top and bottom row, excluding corners (doesn't matter if you overwrite corners)
             tempgrid[0][j] = false;
             tempgrid[G->n_rows + 1][j] = false;
         }
     }
 
     // copy old board to interior of placeholder matrix
-    for (int i = 0; i < G->n_rows; i++) {
-        memcpy(&tempgrid[i+1][1], M[i], G->n_cols * sizeof(bool));
+    for (int i = 0; i < G->n_rows; i++) {                                   // tempgrid[0][j] is the top row used for padding -> avoid! (same for bottom row)
+        memcpy(&tempgrid[i+1][1], M[i], G->n_cols * sizeof(bool));          // tempgrid[i][0] is the left column, also for padding -> avoid! (same for right column)
     }
 
     // Reset Lv->M to an empty board after copying
@@ -200,7 +200,7 @@ void draw_cursor(size_t ypos, size_t xpos, size_t starty, bool erase) {
       mvaddch(ypos + starty, (xpos * 2) + 1, '[');
       mvaddch(ypos + starty, (xpos * 2) + 3, ']');
    } else {
-      mvaddch(ypos + starty, (xpos * 2) + 1, ' ');
+      mvaddch(ypos + starty, (xpos * 2) + 1, ' ');                          // if we are in erase mode, just overwrite with a space character
       mvaddch(ypos + starty, (xpos * 2) + 3, ' ');      
    }
 }
@@ -236,5 +236,5 @@ void print_gameParams(bool toroidal, size_t upd_rate, size_t maxiters, size_t n_
 
 static inline
 bool test_life(bool current, size_t nbrs) {
-    return (nbrs == 3 || (current && nbrs == 2));
-}
+    return (nbrs == 3 || (current && nbrs == 2));           // 3 living neighbours always gives life. 2 living neighbours also does IFF tile is currently alive.
+}                                                           

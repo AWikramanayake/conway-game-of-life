@@ -102,7 +102,8 @@ void destroy_game(game_state*);
     Params:
     rows: # of rows
     cols: # of cols
-    returns: void pointer to the start of the array of row pointers to the matrix rows 
+    returns: void pointer to the START OF ARRAY OF POINTERS to the matrix rows
+    note: Start of data block can be accessed using (bool**)returned_voidptr[0]
 */ 
 void* create_matrix(size_t rows, size_t cols);
 
